@@ -1,0 +1,177 @@
+<?php
+
+namespace app\models;
+
+use Yii;
+
+/**
+ * This is the model class for table "utenti".
+ *
+ * @property int $id
+ * @property string $username
+ * @property string $pwd
+ * @property string $authKey
+ * @property string $accessToken
+ * @property int $id_livello
+ * @property string $nome
+ * @property string $cognome
+ * @property string $cellulare
+ * @property string $email
+ * @property int $sendmail
+ * @property string $data
+ * @property string $utente
+ *
+ * @property LivelloUtente $livello
+ */
+class Utenti extends \yii\db\ActiveRecord
+{
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return 'utenti';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['username', 'pwd', 'authKey', 'accessToken', 'id_livello', 'nome', 'cognome', 'cellulare', 'sendmail'], 'required'],
+            [['id_livello'], 'integer'],
+            [['data'], 'safe'],
+            [['username'], 'string', 'unique', 'max' => 10],
+            [['pwd'], 'string', 'max' => 255],
+            [['authKey', 'accessToken', 'email'], 'string', 'max' => 50],
+            [['nome', 'cognome'], 'string', 'max' => 60],
+            [['cellulare'], 'string', 'max' => 20],
+            [['sendmail'], 'string', 'max' => 4],
+            [['utente'], 'string', 'max' => 130],
+            [['username'], 'unique'],
+            [['id_livello'], 'exist', 'skipOnError' => true, 'targetClass' => LivelloUtente::className(), 'targetAttribute' => ['id_livello' => 'id']],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'username' => 'Username',
+            'pwd' => 'Pwd',
+            'authKey' => 'Auth Key',
+            'accessToken' => 'Access Token',
+            'id_livello' => 'Id Livello',
+            'nome' => 'Nome',
+            'cognome' => 'Cognome',
+            'cellulare' => 'Cellulare',
+            'email' => 'Email',
+            'sendmail' => 'Sendmail',
+            'data' => 'Data',
+            'utente' => 'Utente',
+        ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLivello()
+    {
+        return $this->hasOne(LivelloUtente::className(), ['id' => 'id_livello']);
+    }
+
+// Luca
+public static function findIdentity($id) {
+    $user = self::find()
+            ->where([
+                "id" => $id
+            ])
+            ->one();
+    if (!count($user)) {
+        return null;
+    }
+    return new static($utenti);
+}
+
+/**
+ * @inheritdoc
+ */
+public static function findIdentityByAccessToken($token, $userType = null) {
+ 
+    $user = self::find()
+            ->where(["accessToken" => $token])
+            ->one();
+    if (!count($user)) {
+        return null;
+    }
+    return new static($user);
+}
+
+/**
+ * Finds user by username
+ *
+ * @param  string  $username
+ * @return static|null
+ */
+public static function findByUsername($username) {
+    $user = self::find()
+            ->where([
+                "username" => $username
+            ])
+            ->one();
+    if (!count($user)) {
+        return null;
+    }
+    return new static($user);
+}
+
+
+public static function findByUser($username) {
+    $user = self::find()
+            ->where([
+                "username" => $username
+            ])
+            ->one();
+    if (!count($user)) {
+        return null;
+    }
+    return $user;
+}
+ 
+/**
+ * @inheritdoc
+ */
+public function getId() {
+    return $this->id;
+}
+ 
+/**
+ * @inheritdoc
+ */
+public function getAuthKey() {
+    return $this->authKey;
+}
+
+ 
+/**
+ * @inheritdoc
+ */
+public function validateAuthKey($authKey) {
+    return $this->authKey === $authKey;
+}
+ 
+/**
+ * Validates password
+ *
+ * @param  string  $password password to validate
+ * @return boolean if password provided is valid for current user
+ */
+public function validatePassword($password) {
+	 $user = Yii::app()->db->select();
+    return $this->password ===  md5($password);
+}
+}

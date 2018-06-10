@@ -1,0 +1,52 @@
+<?php
+
+use yii\helpers\Html;
+use yii\widgets\DetailView;
+use \app\models\Anagrafica;
+
+/* @var $this yii\web\View */
+/* @var $model app\models\Rischi */
+
+$this->title = $model->titolo;
+
+$schedaBersaglio = $model->getBersaglio()->one();
+$schedaAnagrafica = Anagrafica::find()->where('id = ' . $schedaBersaglio["id_anagrafica"])->one();
+$nomeUtente = $schedaAnagrafica['nome'];
+$cognomeUtente = $schedaAnagrafica['cognome'];
+
+$desBersaglio = $schedaBersaglio['descrizione'];
+//$nomeUtente = $model->nome;
+$model->desBersaglio = $desBersaglio;
+$model->nomeUtente = $nomeUtente . ' ' . $cognomeUtente;
+$this->params['breadcrumbs'][] = ['label' => 'Rischi', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
+?>
+<div class="rischi-view">
+
+    <h1><?= Html::encode($this->title) ?></h1>
+
+    <p>
+        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+            'class' => 'btn btn-danger',
+            'data' => [
+                'confirm' => 'Sei sicuro di voler eliminare questo elemento?',
+                'method' => 'post',
+            ],
+        ]) ?>
+    </p>
+
+    <?= DetailView::widget([
+        'model' => $model,
+        'attributes' => [
+            'id',
+            'nomeutente',
+            'titolo',
+            'descrizione:ntext',
+            'desBersaglio',
+            'data:datetime',
+            'utente',
+        ],
+    ]) ?>
+
+</div>

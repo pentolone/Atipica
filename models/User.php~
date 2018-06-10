@@ -1,0 +1,244 @@
+<?php
+
+namespace app\models;
+
+use Yii;
+use Yii\db\Query;
+
+/**
+ * This is the model class for table "utenti".
+ *
+ * @property int $id
+ * @property string $username
+ * @property string $pwd
+ * @property string $authKey
+ * @property string $accessToken
+ * @property string $auth_rule
+ * @property string $nome
+ * @property string $cognome
+ * @property string $cellulare
+ * @property string $email
+ * @property int $sendmail
+ * @property string $data
+ * @property string $utente
+ *
+ * @property LivelloUtente $livello
+ */
+
+class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
+{
+   public $old_pwd;
+	public $new_pwd;
+	public $repeat_pwd;
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return 'user';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['username', 'pwd', 'nome', 'cognome', 'cellulare', 'sendmail', 'auth_rule'], 'required'],
+            ['repeat_pwd', 'compare', 'compareAttribute'=>'pwd', 'message'=>"Le password non coincidono", 'on' => 'insert'],
+            [['username'], 'string', 'max' => 10],
+            [['pwd', 'repeat_pwd'], 'string', 'min' => 6, 'max' => 255, 'on' => 'insert'],
+            [['repeat_pwd'], 'string', 'max' => 255, 'on' => 'insert'],
+            [['authKey', 'accessToken', 'email'], 'string', 'max' => 50],
+            [['nome', 'cognome'], 'string', 'max' => 60],
+            [['cellulare'], 'string', 'max' => 20],
+            [['sendmail'], 'boolean'],
+            [['utente'], 'string', 'max' => 130],
+            [['username'], 'unique'],
+            [['email'], 'email'],
+            [['email'], 'default', 'value' => null],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'username' => 'Username',
+            'pwd' => 'Password',
+            'repeat_pwd' => 'Conferma password',
+            'authKey' => 'Auth Key',
+            'accessToken' => 'Access Token',
+            'auth_rule' => 'Livello utente',
+            'nome' => 'Nome',
+            'cognome' => 'Cognome',
+            'cellulare' => 'Cellulare',
+            'email' => 'Email',
+            'sendmail' => 'Invia mail',
+            'data' => 'Data/Ora ultimo aggiornamento',
+            'utente' => 'Aggiornato da',
+        ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+  /*  public function getLivello()
+    {
+        return $this->hasOne(AuthRule::className(), ['name' => 'auth_rule']);
+    } */
+     
+public static function findIdentity($id) {
+    $user = self::find()
+            ->where([
+                "id" => $id
+            ])
+            ->one();
+    if (!count($user)) {
+        return null;
+    }
+    return new static($user);
+}
+ 
+/**
+ * @inheritdoc
+ */
+public static function findIdentityByAccessToken($token, $userType = null) {
+ 
+    $user = self::find()
+            ->where(["accessToken" => $token])
+            ->one();
+    if (!count($user)) {
+        return null;
+    }
+    return new static($user);
+}
+ 
+/**
+ * Finds user by username
+ *
+ * @param  string      $username
+ * @return static|null
+ */
+public static function findIdentityByUsername($username) {
+    $user = self::find()
+            ->where([
+                "username" => $username
+            ])
+            ->one();
+    if (!count($user)) {
+        return null;
+    }
+    return new static($user);
+}
+ 
+public static function findByUser($username) {
+    $user = self::find()
+            ->where([
+                "username" => $username
+            ])
+            ->one();
+    if (!count($user)) {
+        return null;
+    }
+    return $user;
+}
+ 
+/**
+ * @inheritdoc
+ */
+public function getId() {
+    return $this->id;
+}
+ 
+/**
+ * @inheritdoc
+ */
+public function getAuthKey() {
+    return $this->authKey;
+}
+ 
+/**
+ * @inheritdoc
+ */
+public function validateAuthKey($authKey) {
+    return $this->authKey === $authKey;
+}
+ 
+/**
+ * Ritorna hashed password
+  */
+  
+  public function returnHashedPassword($password) {
+     $query = new Query;
+	  $query->select('PASSWORD("' . $password . '") AS ck FROM DUAL');
+	  $rows = $query->all();
+	  return($rows[0]['ck']);
+  }
+/**
+ * Validates password
+ *
+ * @param  string  $password password to validate
+ * @return boolean if password provided is valid for current user
+ */
+public function validatePassword($password) {
+	
+    return $this->pwd ===  $this->returnHashedPassword($password);
+}
+    
+   /**
+     * 
+     * Set default values for access token and access key
+     * (see config/params.php)
+     * Insert row in table auth_assignment (MySql trigger)
+     */
+   public function beforeSave($insert)
+   {
+   	     $defaultPrefix = 'undefined';
+   	     $keySuffix = 'undefined';
+   	     $tokenSuffix = 'undefined';
+   	     $query = new Query;
+   	     $lastID = 0;
+   	     
+   	     
+ 	     $query->select('MAX(id) AS lastID FROM ' . $this->tableName());
+	     $rows = $query->all();
+
+	     isset($rows[0]['lastID']) ?  $lastID = $rows[0]['lastID'] : $lastID;	       	        	     
+   	     isset(Yii::$app->params['defaultPrefix']) ? $defaultPrefix = Yii::$app->params['defaultPrefix'] : $defaultPrefix;
+   	     isset(Yii::$app->params['keySuffix']) ? $keySuffix = Yii::$app->params['keySuffix'] : $keySuffix;
+   	     isset(Yii::$app->params['tokenSuffix']) ? $tokenSuffix = Yii::$app->params['tokenSuffix'] : $tokenSuffix;
+
+   	     if($this->isNewRecord) {
+   	     	  $lastID += 1;
+   	     	  $this->pwd = $this->returnHashedPassword($this->pwd);
+   	     	  $this->authKey = $defaultPrefix . $lastID . $keySuffix;
+   	     	  $this->accessToken = $defaultPrefix . $lastID . $tokenSuffix;
+   	     	  
+   	     	  return true;
+   	     	   
+   		     }
+   		 else {
+   		 	//var_dump($insert);
+   		 	  return true;
+   		     }
+   } 
+
+	//matching the old password with your existing password.
+	public function findPasswords($attribute, $params)
+	{
+		$user = User::model()->findByPk(Yii::app()->user->id);
+		if ($user->pwd != $this->returnHashedPassword($this->old_pwd))
+			$this->addError($attribute, 'Password attuale non corretta.');
+	} 
+
+	public function setPassword($pwd)
+	{
+   	     	  $this->pwd = $this->returnHashedPassword($pwd);
+	} 
+
+ }
+
