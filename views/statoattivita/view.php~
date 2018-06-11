@@ -29,8 +29,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'descrizione',
-            'colore', ['options' => ['style' => 'text-align: right']],
+            ['attribute' => $model->getAttributeLabel('descrizione'), 'value' => $model->descrizione, 
+            'contentOptions' => [
+                           'style' => 'background-color:' . $model->colore]
+            ],
+            'colore',
             'note:ntext',
             'data:datetime',
             'utente',

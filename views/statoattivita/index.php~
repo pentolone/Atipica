@@ -9,6 +9,7 @@ use yii\grid\GridView;
 
 $this->title = 'Stato Attività';
 $this->params['breadcrumbs'][] = $this->title;
+var_dump($searchModel);
 ?>
 <div class="statoattivita-index">
 
@@ -22,11 +23,13 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'columns' => [
+        'rowOptions'=>function($model){
+                return ['style' => 'background-color:' . $model->colore];
+            },
+           'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
             'descrizione',
-            'colore',
             'note:ntext',
 
             ['class' => 'yii\grid\ActionColumn'],

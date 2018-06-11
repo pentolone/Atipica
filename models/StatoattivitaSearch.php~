@@ -5,24 +5,21 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Bersaglio;
-use app\models\Anagrafica;
-use yii\db\Query;
+use app\models\Statoattivita;
 
 /**
- * BersaglioSearch represents the model behind the search form of `\app\models\Bersaglio`.
+ * StatoattivitaSearch represents the model behind the search form of `\app\models\Statoattivita`.
  */
-class BersaglioSearch extends Bersaglio
+class StatoattivitaSearch extends Statoattivita
 {
-	public $nomeUtente;
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'id_anagrafica'], 'integer'],
-            [['nomeUtente', 'titolo', 'descrizione', 'data', 'utente'], 'safe'],
+            [['id'], 'integer'],
+            [['descrizione', 'colore', 'note', 'data', 'utente'], 'safe'],
         ];
     }
 
@@ -44,14 +41,14 @@ class BersaglioSearch extends Bersaglio
      */
     public function search($params)
     {
-        $query = Bersaglio::find()->select(['bersaglio.*', 'CONCAT(anagrafica.nome, \' \', anagrafica.cognome) AS nomeUtente'])
-                                                ->joinWith(['anagrafica'])->asArray();
+        $query = Statoattivita::find();
+
+        // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> ['defaultOrder' => ['titolo' => SORT_ASC]]
         ]);
-        $dataProvider->sort->attributes['anagrafica'] = ['asc' => ['nomeUtente' => SORT_ASC],];
+
         $this->load($params);
 
         if (!$this->validate()) {
@@ -63,13 +60,14 @@ class BersaglioSearch extends Bersaglio
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'id_anagrafica' => $this->id_anagrafica,
             'data' => $this->data,
         ]);
 
         $query->andFilterWhere(['like', 'descrizione', $this->descrizione])
-                   ->andFilterWhere(['like', 'CONCAT(nome, \' \', cognome)', $this->nomeUtente])
-                   ->andFilterWhere(['like', 'utente', $this->utente]);
+            ->andFilterWhere(['like', 'colore', $this->colore])
+            ->andFilterWhere(['like', 'note', $this->note])
+            ->andFilterWhere(['like', 'utente', $this->utente]);
+
         return $dataProvider;
     }
 }

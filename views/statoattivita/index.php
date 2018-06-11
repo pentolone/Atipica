@@ -22,11 +22,13 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'columns' => [
+        'rowOptions'=>function($model){
+                return ['style' => 'background-color:' . $model->colore];
+            },
+           'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
             'descrizione',
-            'colore',
             'note:ntext',
 
             ['class' => 'yii\grid\ActionColumn'],

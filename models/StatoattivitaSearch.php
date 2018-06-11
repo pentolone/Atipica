@@ -47,6 +47,7 @@ class StatoattivitaSearch extends Statoattivita
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=> ['defaultOrder' => ['descrizione' => SORT_ASC]]
         ]);
 
         $this->load($params);

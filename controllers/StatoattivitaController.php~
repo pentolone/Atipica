@@ -117,13 +117,9 @@ class StatoattivitaController extends Controller
      */
     public function actionDelete($id)
     {
-    	  if((Yii::$app->user->id == 1) || Yii::$app->user->can('delete-sattivita') ) {
-	        $this->findModel($id)->delete();
-	
-	        return $this->redirect(['index']);
-          } else { // user is not allowed
-          	throw new ForbiddenHttpException;
-          }             
+        $this->findModel($id)->delete();
+
+        return $this->redirect(['index']);
     }
 
     /**

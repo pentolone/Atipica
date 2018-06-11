@@ -47,10 +47,6 @@ class BersaglioSearch extends Bersaglio
         $query = Bersaglio::find()->select(['bersaglio.*', 'CONCAT(anagrafica.nome, \' \', anagrafica.cognome) AS nomeUtente'])
                                                 ->joinWith(['anagrafica'])->asArray();
 
-        //$query = Bersaglio::find();
-        //$query = Bersaglio::find();
-        //$query->joinWith(['anagrafica']);
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         //    'sort'=> ['defaultOrder' => ['nomeUtente'=>SORT_ASC]],

@@ -29,15 +29,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($model, 'old_password')->passwordInput() ?>
         <?= $form->field($model, 'password')->passwordInput() ?>
         <?= $form->field($model, 'confirm_password')->passwordInput() ?>
-        <?= $form->field($model, 'color')->widget(ColorInput::classname(), [
-    'options' => ['placeholder' => 'Select color ...'],
-]) ?>
-<?php echo '<label class="control-label">Select Color</label>';
-echo ColorInput::widget([
-    'model' => $model,
-    'attribute' => 'color_1',
-    'options' => ['placeholder' => 'Select color ...']]); 
-?>
         <div class="form-group">
             <?= Html::submitButton('Modifica', ['class' => 'btn btn-success']) ?>
         </div>
