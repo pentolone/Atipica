@@ -40,18 +40,26 @@ class IndicatoriSearch extends Indicatori
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $idBersaglio = 0)
     {
+        $filterBersaglio = '1 = 1';    	
+    	  if($id_bersaglio > 0) {
+    	  	   $filterBersaglio = 'indicatori.id_bersaglio = ' . $id_bersaglio;
+    	  	   
+    	     }
         $query = Indicatori::find()->select(['indicatori.*', 'CONCAT(anagrafica.nome, \' \', anagrafica.cognome) AS nomeUtente'])
                                                  ->from(['indicatori', 'bersaglio', 'anagrafica'])
                                                  ->where('bersaglio.id_anagrafica =  anagrafica.id')
                                                  ->andWhere('bersaglio.id = indicatori.id_bersaglio')
+                                                 ->andWhere($filterBersaglio)
                                                  ->asArray();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=> ['attributes' => ['nomeUtente', 'titolo'],
+                          'defaultOrder' => ['titolo'=>SORT_ASC]],
         ]);
 
         $this->load($params);

@@ -1,0 +1,92 @@
+<?php
+
+namespace app\models;
+
+use Yii;
+
+/**
+ * This is the model class for table "attivita".
+ *
+ * @property int $id
+ * @property int $id_bersaglio
+ * @property int $id_stato_attivita
+ * @property string $descrizione
+ * @property string $data_esecuzione_attivita
+ * @property string $data_chiusura_attivita
+ * @property string $note
+ * @property string $data
+ * @property string $utente
+ *
+ * @property StatoAttivita $statoAttivita
+ * @property Bersaglio $bersaglio
+ */
+class Attivita extends \yii\db\ActiveRecord
+{
+	public $desBersaglio;
+	public $desStatoAttivita;
+	public $nomeUtente;
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return 'attivita';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['id_bersaglio', 'descrizione', 'data_esecuzione_attivita', 'attivita_conclusa'], 'required'],
+            [['id_bersaglio', 'id_stato_attivita'], 'integer'],
+            [['data_esecuzione_attivita', 'data_chiusura_attivita', 'data'], 'safe'],
+            [['attivita_conclusa'], 'boolean'],
+            [['note'], 'string'],
+            [['note'], 'default', 'value' => null],
+            [['descrizione'], 'string', 'max' => 100],
+            [['utente'], 'string', 'max' => 130],
+            [['id_stato_attivita'], 'exist', 'skipOnError' => true, 'targetClass' => Statoattivita::className(), 'targetAttribute' => ['id_stato_attivita' => 'id']],
+            [['id_bersaglio'], 'exist', 'skipOnError' => true, 'targetClass' => Bersaglio::className(), 'targetAttribute' => ['id_bersaglio' => 'id']],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'id_bersaglio' => 'Bersaglio',
+            'desBersaglio' => 'Bersaglio',
+            'id_stato_attivita' => 'Stato Attivita',
+            'nomeUtente' => 'Nome utente',
+            'desStatoAttivita' => 'Stato Attività',
+            'descrizione' => 'Descrizione',
+            'data_esecuzione_attivita' => 'Data Esecuzione Attivita',
+            'data_chiusura_attivita' => 'Data Chiusura Attivita',
+            'attivita_conclusa' => 'Attività conclusa',
+            'note' => 'Note',
+            'data' => 'Data/Ora ultimo aggiornamento',
+            'utente' => 'Aggiornato da',
+        ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getStatoAttivita()
+    {
+        return $this->hasOne(Statoattivita::className(), ['id' => 'id_stato_attivita']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBersaglio()
+    {
+        return $this->hasOne(Bersaglio::className(), ['id' => 'id_bersaglio']);
+    }
+}

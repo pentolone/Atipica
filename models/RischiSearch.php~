@@ -73,7 +73,7 @@ class RischiSearch extends Rischi
         ]);
 
         $query->andFilterWhere(['like', 'descrizione', $this->descrizione])
-            ->andFilterWhere(['like', 'CONCAT(nome, \' \', cognome AS nomeUtente)', $this->nomeUtente])
+            ->andFilterWhere(['like', 'CONCAT(nome, \' \', cognome)', $this->nomeUtente])
             ->andFilterWhere(['like', 'rischi.titolo', $this->titolo])
             ->andFilterWhere(['like', 'utente', $this->utente]);
 

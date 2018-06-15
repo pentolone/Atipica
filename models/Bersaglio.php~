@@ -19,7 +19,7 @@ use \app\models\Anagrafica;
 class Bersaglio extends \yii\db\ActiveRecord
 {
 // Nome anagrafica	
-	//public $nome;
+	public $nomeUtente;
     /**
      * @inheritdoc
      */
