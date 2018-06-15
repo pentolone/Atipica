@@ -40,12 +40,18 @@ class RischiSearch extends Rischi
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $id_bersaglio = 0)
     {
+        $filterBersaglio = '1 = 1';    	
+    	  if($id_bersaglio > 0) {
+    	  	   $filterBersaglio = 'rischi.id_bersaglio = ' . $id_bersaglio;
+    	  	   
+    	     }
         $query = Rischi::find()->select(['rischi.*', 'CONCAT(anagrafica.nome, \' \', anagrafica.cognome) AS nomeUtente'])
                                             ->from(['rischi', 'bersaglio', 'anagrafica'])
                                             ->where('bersaglio.id_anagrafica =  anagrafica.id')
                                             ->andWhere('bersaglio.id = rischi.id_bersaglio')
+                                            ->andWhere($filterBersaglio)
                                             ->asArray();
                                                 //var_dump($query);
         //$query = Rischi::find();

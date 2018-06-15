@@ -14,15 +14,33 @@ use Yii;
 class Showutentistatus extends Model {
     public $nomeUtente;
 
+    public $idAnagrafica;
+    public $nome;
+    public $cognome;
+    public $dataNascita;
+    public $mesiPassati;
+    public $giorniUtili;
+    public $giorniTotali;
+
+    public $giorniUtili18;
+    public $giorniTotali18;
+
+    public $giorniUtili21;
+    public $giorniTotali21;
+    public $ages = array('18', '21');
+
+    public $idBersaglio;
     public $titoloBersaglio;
     public $descrizioneBersaglio;
 
-    public $titoloRischio;
-    public $descrizioneRischio;
+    public $datiAttivita = array();
+    public $datiRischio = array();
+    public $datiIndicatore = array();
+    public $datiStatoAttivita = array();
 
     public $titoloIndicatore;
     public $descrizioneIndicatore;
-
+ 
     public $appBackendTheme;
     public $appFrontendTheme;
 
@@ -41,6 +59,7 @@ class Showutentistatus extends Model {
             ['nomeUtente', 'required'],
             
             // Bersaglio
+            ['idBersaglio', 'required'],
             ['titoloBersaglio', 'required'],
             ['descrizioneBersaglio', 'required'],
             
@@ -52,6 +71,10 @@ class Showutentistatus extends Model {
             ['titoloIndicatore', 'required'],
             ['descrizioneIndicatore', 'required'],
             
+            // Attivita
+            ['titoloAttivita', 'required'],
+            ['descrizioneAttivita', 'required'],
+            
             // Progress Bar
             ['progressBar', 'required'],
          ];
@@ -61,8 +84,28 @@ class Showutentistatus extends Model {
     {
     	return [
             ['userName' => 'Nome utente'],
+            ['dataNascita' => 'Data di Nascita'],
+            ['mesiPassati' => 'Mesi trascorsi'],
             ['titoloBersaglio' => 'Bersaglio'],
          ];
     }
+
+    public function getAvailableMonths($age = 18)
+    /**
+     * Return avilable months since birthDate
+     *
+     **/
+    {
+    	//$query = new Query;
+    	//$holidays = '(TIMESTAMPDIFF(MONTH, employment_date, curdate()))';
+    }
+         public function test() {
+         	      $retValues = array();
+         			foreach($this->datiAttivita as $attivita) {
+                             // array_push($retValues, $attivita);
+         				           //$retValues .= "ID = " . $attivita->descrizione;
+         			            }
+         			         return($retValues);
+         			         }
 
 } // End of model class definition

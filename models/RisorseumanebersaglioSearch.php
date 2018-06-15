@@ -5,24 +5,21 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Bersaglio;
-use app\models\Anagrafica;
-use yii\db\Query;
+use app\models\Risorseumanebersaglio;
 
 /**
- * BersaglioSearch represents the model behind the search form of `\app\models\Bersaglio`.
+ * RisorseumanebersaglioSearch represents the model behind the search form of `\app\models\Risorseumanebersaglio`.
  */
-class BersaglioSearch extends Bersaglio
+class RisorseumanebersaglioSearch extends Risorseumanebersaglio
 {
-	public $nomeUtente;
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'id_anagrafica'], 'integer'],
-            [['nomeUtente', 'titolo', 'descrizione', 'data', 'utente'], 'safe'],
+            [['id', 'id_bersaglio', 'id_risorse_umane'], 'integer'],
+            [['data', 'utente'], 'safe'],
         ];
     }
 
@@ -44,15 +41,14 @@ class BersaglioSearch extends Bersaglio
      */
     public function search($params)
     {
-        $query = Bersaglio::find()->select(['bersaglio.*', 'CONCAT(anagrafica.nome, \' \', anagrafica.cognome) AS nomeUtente'])
-                                                ->joinWith('anagrafica')->orderBy('nomeUtente')->asArray();
+        $query = Risorseumanebersaglio::find();
+
+        // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort' => ['attributes' => ['nomeUtente', 'titolo'],
-                           'defaultOrder' => ['titolo' => SORT_ASC]],
         ]);
-        
+
         $this->load($params);
 
         if (!$this->validate()) {
@@ -64,13 +60,13 @@ class BersaglioSearch extends Bersaglio
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'id_anagrafica' => $this->id_anagrafica,
+            'id_bersaglio' => $this->id_bersaglio,
+            'id_risorse_umane' => $this->id_risorse_umane,
             'data' => $this->data,
         ]);
 
-        $query->andFilterWhere(['like', 'descrizione', $this->descrizione])
-                   ->andFilterWhere(['like', 'CONCAT(nome, \' \', cognome)', $this->nomeUtente])
-                   ->andFilterWhere(['like', 'utente', $this->utente]);
+        $query->andFilterWhere(['like', 'utente', $this->utente]);
+
         return $dataProvider;
     }
 }

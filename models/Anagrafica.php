@@ -50,6 +50,17 @@ class Anagrafica extends \yii\db\ActiveRecord
 	public $descrizioneProfessione;
 	public $descrizioneTitoloStudio;
 	public $descrizioneClassificazione;
+	
+	public $mesiPassati;
+	public $mesiUtili;
+	public $giorniUtili;
+	public $giorniTotali;
+
+	public $giorniUtili18;
+	public $giorniTotali18;
+
+	public $giorniUtili21;
+	public $giorniTotali21;
 
     /**
      * @inheritdoc
@@ -128,6 +139,25 @@ class Anagrafica extends \yii\db\ActiveRecord
             'utente' => 'Utente',
         ];
     }
+
+    /**
+     * Concatena Nome e Cognome
+     *
+     */    
+    public function getfullName()
+    {
+                return $this->nome.' '.$this->cognome;
+    }  
+
+    /**
+     * Concatena Nome e Cognome e data
+     *
+     */    
+    public function getfullNameAndDate()
+    {
+                return $this->getFullName() . ' data di nascita: ' . Yii::$app->formatter->format($this->data_nascita,'date');
+    }  
+ 
     /**
      * @return \yii\db\ActiveQuery
      *
