@@ -1,31 +1,76 @@
 <?php
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-use yii\grid\GridView;
+use yii\bootstrap\Dropdown;
+use yii\helpers\ArrayHelper;
+use yii\bootstrap\ActiveForm;
  
 /* @var $this yii\web\View */
 /* @var $model models\Showutentistatus */
 /* @var $form ActiveForm */
+
+/**
+ * Model class
+ *
+ */
+use \app\models\Showutentistatus;
+use \app\models\Anagrafica;
+/**
+ * Classes used for drop down selection
+ *
+ */
+use app\models\Bersaglio;
  
 $this->title = 'Stato utente';
-$this->params['breadcrumbs'][] = ['label' => 'Anagrafica', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Stato utente', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+$model = new Showutentistatus();
+$request = Yii::$app->request;
+/**
+ *  Variabili locali
+ *
+ **/
+$className = 'Showutentistatus';
+
+// Lista Utenti
+$anagrafica = Anagrafica::find()->orderBy(['nome' => SORT_ASC, 'cognome' => SORT_ASC])->all();
+$listAnagrafiche = ArrayHelper::map($anagrafica, 'id', 'fullNameAndDate');
+
 ?>
 <div class="anagrafica-statoUtente">
-     <?php $form = ActiveForm::begin(); ?>
-    <?= GridView::widget([
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
 
-            'descrizione',
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
- 
+    <?php $form = ActiveForm::begin(['layout' => 'inline']);
+                if($model->load($request->post())) {
+                	$data = $request->post();
+                	$model->idAnagrafica = $data[$className]['idAnagrafica'];                 } 
+                 ?>
+
+			      <?= $form->field($model, 'idAnagrafica')->dropDownList(
+			                                         $listAnagrafiche,
+			                                         ['prompt' => 'Seleziona utente dalla lista...',
+			                                         'onChange' => 'this.form.submit();']); ?>
+
+			     <?php 
+			     if($model->idAnagrafica > 0) { 
+						// Lista bersagli
+                   $bersagli=Bersaglio::find()->where(['id_anagrafica' => $model->idAnagrafica])
+						                                          ->orderBy(['titolo' => SORT_ASC])->all();
+						$listBersagli = ArrayHelper::map($bersagli, 'id', 'titolo');			     
+			     ?>
+						<?= 
+			          $form->field($model, 'idBersaglio')->dropDownList(
+			                                         $listBersagli,
+			                                         ['prompt'=>'Seleziona bersaglio dalla lista...',
+			                                         'onChange' => 'this.form.submit();']); ?>
+			      <?php }
+			        if($model->idBersaglio > 0) { // Show the go button 
+			            Yii::$app->response->redirect(['showutentistatus/view', 'id' =>  $model->idBersaglio]);
+                 } ?>
+      
  
         <div class="form-group">
             <?= Html::submitButton('Modifica', ['class' => 'btn btn-success']) ?>
         </div>
-    <?php ActiveForm::end(); ?>
  
+    <?php ActiveForm::end(); ?>
 </div>

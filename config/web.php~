@@ -9,7 +9,7 @@ $config = [
     'language' => 'it',
     
     //---- END layout configuration
-    'timeZone' => 'Europe/Berlin',
+    'timeZone' => 'Europe/Rome',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -17,7 +17,12 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
-
+'formatter' => [
+            'dateFormat' => 'dd.MM.yyyy',
+            'decimalSeparator' => ',',
+            'thousandSeparator' => ' ',
+            'currencyCode' => 'EUR',
+            ],
     //---- Layout configuration ----
 
 /*    'view' => [
