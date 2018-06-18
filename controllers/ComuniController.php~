@@ -36,7 +36,7 @@ class ComuniController extends Controller
      */
     public function actionIndex()
     {
-    	  if((!Yii::$app->user->isGuest) {
+    	  if(!Yii::$app->user->isGuest) {
 	        $searchModel = new ComuniSearch();
 	        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 	
@@ -95,6 +95,9 @@ class ComuniController extends Controller
     {
     	  if((Yii::$app->user->id == 1) || Yii::$app->user->can('update-comune') ) {
              $model = $this->findModel($id);
+             
+             var_dump($model);
+             return;
 
              if ($model->load(Yii::$app->request->post()) && $model->save()) {
                   return $this->redirect(['view', 'id' => $model->id]);

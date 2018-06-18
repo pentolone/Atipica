@@ -54,10 +54,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'data_esecuzione_attivita:date',
             'data_chiusura_attivita:date',
+            'attivita_conclusa:boolean',
             'note:ntext',
             'data:datetime',
             'utente',
         ],
     ]) ?>
+<?php
+echo Yii::$app->formatter->asDateTime($model->data);
+?>
 
 </div>

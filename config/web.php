@@ -7,9 +7,10 @@ $config = [
     'id' => 'basic',
     'name' => 'Atipica.org',
     'language' => 'it',
+    'sourceLanguage' => 'it_IT',
     
     //---- END layout configuration
-    'timeZone' => 'Europe/Rome',
+ //   'timeZone' => 'Europe/Rome',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -17,7 +18,17 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
-
+    // Date/time format
+        'formatter' => [
+			    'locale' => 'it_IT',
+			    'timeZone' => 'Europe/Rome',
+             'dateFormat' => 'php: d/M/Y',
+             'datetimeFormat' => 'php: d/M/Y H:i:s',
+             'dateFormat' => 'php: d/M/Y',
+            'timeFormat' => 'php: H:i:s',
+            'thousandSeparator' => ' ',
+            'currencyCode' => 'EUR',
+       ],
     //---- Layout configuration ----
 
 /*    'view' => [

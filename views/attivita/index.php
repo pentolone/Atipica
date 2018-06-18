@@ -30,10 +30,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'descrizione',
             'desStatoAttivita',
             'data_esecuzione_attivita:date',
-            //'data_chiusura_attivita',
-            //'note:ntext',
-            //'data',
-            //'utente',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

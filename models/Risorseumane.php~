@@ -15,6 +15,7 @@ use Yii;
  */
 class Risorseumane extends \yii\db\ActiveRecord
 {
+	public $id_bersaglio;
     /**
      * @inheritdoc
      */
@@ -44,10 +45,10 @@ class Risorseumane extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'titolo' => 'Titolo',
+            'titolo' => 'Risorsa',
             'note' => 'Note',
-            'data' => 'Data',
-            'utente' => 'Utente',
+            'data' => 'Data/ora ultimo aggiornamento',
+            'utente' => 'Aggiornato da',
         ];
     }
 }

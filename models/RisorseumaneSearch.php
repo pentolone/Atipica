@@ -39,10 +39,19 @@ class RisorseumaneSearch extends Risorseumane
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $id_bersaglio = 0)
     {
-        $query = Risorseumane::find();
-
+ 	  if($id_bersaglio > 0) {
+	        $query = Risorseumane::find()->select(['risorse_umane.*'])
+							                                            ->from(['risorse_umane', 'risorse_umane_bersaglio'])
+															                  ->where('risorse_umane.id = risorse_umane_bersaglio.id_risorse_umane')
+							                                            ->andWhere('risorse_umane_bersaglio.id_bersaglio = ' . $id_bersaglio)
+							                                            ->asArray();
+ 	 	     }
+    	 else {
+	        $query = Risorseumane::find();
+    	 }
+   
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([

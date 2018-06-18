@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "risorse_umane_bersaglio".
+ * This is the model class for table "risorse_umane_bersaglio and risorse_esterne_bersaglio".
  *
  * @property int $id
  * @property int $id_bersaglio
@@ -48,8 +48,8 @@ class Risorseumanebersaglio extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'id_bersaglio' => 'Id Bersaglio',
-            'id_risorse_umane' => 'Id Risorse Umane',
+            'id_bersaglio' => 'Bersaglio',
+            'id_risorse_umane' => 'Risorse Umane',
             'data' => 'Data',
             'utente' => 'Utente',
         ];

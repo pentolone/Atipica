@@ -85,12 +85,24 @@ $labelFuturo21 = 'DIsponibile (' . (100-round($pastPercentage21, 1)) .'%)';
 				                            'itemView' => '_indicatori',
                                         ]),
                  ],
+
+                    ['label' => 'Responsabilità', 'active' => false,
+                     'content' => 'Responsabilità...',
+                    ],
+
                     ['label' => 'Risorse umane', 'active' => false,
-                     'content' => 'Risorse umane blabla...',
+                     'content' => ListView::widget([
+				                            'dataProvider' => $model->datiRisorseUmane,
+				                            'itemView' => '_risorseumane',
+                                        ]),
+
                     ],
 
                     ['label' => 'Risorse esterne', 'active' => false,
-                     'content' => 'Risorse esterne blabla...',
+                     'content' => ListView::widget([
+				                            'dataProvider' => $model->datiRisorseEsterne,
+				                            'itemView' => '_risorseesterne',
+                                        ]),
                     ],
                  ],
           ])  ?>

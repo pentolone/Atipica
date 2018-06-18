@@ -36,7 +36,10 @@ class Showutentistatus extends Model {
     public $datiAttivita = array();
     public $datiRischio = array();
     public $datiIndicatore = array();
+    public $datiResponsabilita = array();
     public $datiStatoAttivita = array();
+    public $datiRisorseUmane = array();
+    public $datiRisorseEsterne = array();
 
     public $titoloIndicatore;
     public $descrizioneIndicatore;
@@ -96,8 +99,6 @@ class Showutentistatus extends Model {
      *
      **/
     {
-    	//$query = new Query;
-    	//$holidays = '(TIMESTAMPDIFF(MONTH, employment_date, curdate()))';
     }
          public function test() {
          	      $retValues = array();

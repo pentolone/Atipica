@@ -52,7 +52,8 @@ class AttivitaSearch extends Attivita
     	     }
         $query = Attivita::find()->select(['attivita.*', 'CONCAT(anagrafica.nome, \' \', anagrafica.cognome) AS nomeUtente,
                                                              bersaglio.descrizione AS desBersaglio,
-                                                             stato_attivita.descrizione AS desStatoAttivita'])
+                                                             stato_attivita.descrizione AS desStatoAttivita,
+                                                             stato_attivita.colore AS colore'])
                                             ->from(['attivita', 'bersaglio', 'anagrafica', 'stato_attivita'])
                                             ->where('bersaglio.id_anagrafica =  anagrafica.id')
                                             ->andWhere('bersaglio.id = attivita.id_bersaglio')

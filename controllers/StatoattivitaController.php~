@@ -73,6 +73,8 @@ class StatoattivitaController extends Controller
 	        $model = new Statoattivita();
 	
 	        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+	        	var_dump($model);
+	        	return;
 	            return $this->redirect(['view', 'id' => $model->id]);
 	        }
 	
@@ -117,9 +119,13 @@ class StatoattivitaController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+    	  if((Yii::$app->user->id == 1) || Yii::$app->user->can('delete-sattivita') ) {
+	        $this->findModel($id)->delete();
+	
+	        return $this->redirect(['index']);
+          } else { // user is not allowed
+          	throw new ForbiddenHttpException;
+          }             
     }
 
     /**

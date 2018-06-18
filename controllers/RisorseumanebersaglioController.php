@@ -8,6 +8,7 @@ use app\models\RisorseumanebersaglioSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\ForbiddenHttpException;
 
 /**
  * RisorseumanebersaglioController implements the CRUD actions for Risorseumanebersaglio model.
@@ -35,13 +36,17 @@ class RisorseumanebersaglioController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new RisorseumanebersaglioSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+    	  if(!Yii::$app->user->isGuest) {
+	        $searchModel = new RisorseumanebersaglioSearch();
+	        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+	
+	        return $this->render('index', [
+	            'searchModel' => $searchModel,
+	            'dataProvider' => $dataProvider,
+	        ]);
+          } else { // user is not allowed
+          	throw new ForbiddenHttpException;
+          }             
     }
 
     /**
@@ -64,15 +69,19 @@ class RisorseumanebersaglioController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Risorseumanebersaglio();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+    	  if((Yii::$app->user->id == 1) || Yii::$app->user->can('create-risorseub') ) {
+	        $model = new Risorseumanebersaglio();
+	
+	        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+	            return $this->redirect(['view', 'id' => $model->id]);
+	        }
+	
+	        return $this->render('create', [
+	            'model' => $model,
+	        ]);
+          } else { // user is not allowed
+          	throw new ForbiddenHttpException;
+          }             
     }
 
     /**
@@ -84,15 +93,19 @@ class RisorseumanebersaglioController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+    	  if((Yii::$app->user->id == 1) || Yii::$app->user->can('update-risorseub') ) {
+	        $model = $this->findModel($id);
+	
+	        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+	            return $this->redirect(['view', 'id' => $model->id]);
+	        }
+	
+	        return $this->render('update', [
+	            'model' => $model,
+	        ]);
+          } else { // user is not allowed
+          	throw new ForbiddenHttpException;
+          }             
     }
 
     /**
@@ -104,9 +117,13 @@ class RisorseumanebersaglioController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+    	  if((Yii::$app->user->id == 1) || Yii::$app->user->can('delete-risorseub') ) {
+	        $this->findModel($id)->delete();
+	
+	        return $this->redirect(['index']);
+          } else { // user is not allowed
+          	throw new ForbiddenHttpException;
+          }             
     }
 
     /**

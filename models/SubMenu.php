@@ -144,8 +144,8 @@ class SubMenu extends \yii\db\ActiveRecord
     			          	// Menu drop down
     			          	 $menuArray[$ix] = array('label' =>  $item['mdescrizione'], 'items' => 
     			          	                                          array(array('label' => $item['sdescrizione'],   'url' =>  $item['starget'], 'id' => $item['sid'])));
-                          $menuArray[$ix]['items'][1] = '<li class="divider"></li>';
-                          $menuArray[$ix]['items'][2] = '<li class="dropdown-header">Dropdown Header</li>';
+                       //   $menuArray[$ix]['items'][1] = '<li class="divider"></li>';
+                         // $menuArray[$ix]['items'][2] = '<li class="dropdown-header">Dropdown Header</li>';
     			          	 $menuID = $item['mid'];
     			          	 continue;
     			             }

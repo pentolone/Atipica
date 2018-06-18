@@ -33,9 +33,13 @@ class Showutentistatus extends Model {
     public $titoloBersaglio;
     public $descrizioneBersaglio;
 
-    public $datiRischio = array();
     public $datiAttivita = array();
+    public $datiRischio = array();
+    public $datiIndicatore = array();
+    public $datiResponsabilita = array();
     public $datiStatoAttivita = array();
+    public $datiRisorseUmane = array();
+    public $datiRisorseEsterne = array();
 
     public $titoloIndicatore;
     public $descrizioneIndicatore;

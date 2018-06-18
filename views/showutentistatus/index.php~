@@ -37,7 +37,7 @@ $anagrafica = Anagrafica::find()->orderBy(['nome' => SORT_ASC, 'cognome' => SORT
 $listAnagrafiche = ArrayHelper::map($anagrafica, 'id', 'fullNameAndDate');
 
 ?>
-<div class="anagrafica-statoUtente">
+<div class="anagrafica-risorseBersaglio">
 
     <?php $form = ActiveForm::begin(['layout' => 'inline']);
                 if($model->load($request->post())) {
@@ -58,19 +58,14 @@ $listAnagrafiche = ArrayHelper::map($anagrafica, 'id', 'fullNameAndDate');
 						$listBersagli = ArrayHelper::map($bersagli, 'id', 'titolo');			     
 			     ?>
 						<?= 
-			          $form->field($model, 'idBersaglio')->dropDownList(
+			          $form->field($model, 'id_bersaglio')->dropDownList(
 			                                         $listBersagli,
 			                                         ['prompt'=>'Seleziona bersaglio dalla lista...',
 			                                         'onChange' => 'this.form.submit();']); ?>
 			      <?php }
 			        if($model->idBersaglio > 0) { // Show the go button 
 			            Yii::$app->response->redirect(['showutentistatus/view', 'id' =>  $model->idBersaglio]);
-                 } ?>
-      
- 
-        <div class="form-group">
-            <?= Html::submitButton('Modifica', ['class' => 'btn btn-success']) ?>
-        </div>
- 
-    <?php ActiveForm::end(); ?>
+                 } 
+       
+               ActiveForm::end(); ?>
 </div>

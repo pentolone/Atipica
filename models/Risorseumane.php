@@ -15,6 +15,8 @@ use Yii;
  */
 class Risorseumane extends \yii\db\ActiveRecord
 {
+	public $id_bersaglio;
+	public $id_risorse_umane;
     /**
      * @inheritdoc
      */

@@ -6,14 +6,27 @@ use Yii;
 use app\models\Showutentistatus;
 
 use app\models\Anagrafica;
+
 use app\models\Bersaglio;
 use app\models\BersaglioSearch;
+
 use app\models\Rischi;
 use app\models\RischiSearch;
+
 use app\models\Attivita;
 use app\models\AttivitaSearch;
+
 use app\models\Indicatori;
 use app\models\IndicatoriSearch;
+
+use app\models\Responsabilita;
+use app\models\ResponsabilitaSearch;
+
+use app\models\Risorseumane;
+use app\models\RisorseumaneSearch;
+
+use app\models\Risorseesterne;
+use app\models\RisorseesterneSearch;
 
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -52,11 +65,12 @@ class ShowutentistatusController extends Controller
         $modelAttivita = new AttivitaSearch();
         $modelRischio = new RischiSearch();
         $modelIndicatore = new IndicatoriSearch();
+        $modelResponsabilita = new ResponsabilitaSearch();
+        $modelRisorsaUmana = new RisorseumaneSearch();
+        $modelRisorsaEsterna = new RisorseesterneSearch();
 
         $sql = 'anagrafica.*';        
         foreach($model->ages as $age) {
-    //    	var_dump($age);
-       // 	return;
         	            $sql .= ',(TIMESTAMPDIFF(DAY,
                                                               curdate(),
                                                               DATE_ADD(anagrafica.data_nascita,
@@ -66,32 +80,25 @@ class ShowutentistatusController extends Controller
                                                               DATE_ADD(anagrafica.data_nascita,
                                                               INTERVAL ' . $age . ' YEAR))) AS giorniTotali' . $age;
                      }
-        //var_dump($sql);
-        //return;
+
         $datiBersaglio = $modelBersaglio->find()->where(['id' => $id])->one();
         $datiAnagrafica = $modelAnagrafica->find()->select([$sql])
-   /*                                                                 ->select(['anagrafica.*,
-                                                                        (TIMESTAMPDIFF(DAY,
-                                                                                                  curdate(),
-                                                                                                  DATE_ADD(anagrafica.data_nascita,
-                                                                                                  INTERVAL ' . $age . ' YEAR))) AS giorniUtili,
-                                                                        (TIMESTAMPDIFF(DAY,
-                                                                                                  data_nascita,
-                                                                                                  DATE_ADD(anagrafica.data_nascita,
-                                                                                                  INTERVAL ' . $age . ' YEAR))) AS giorniTotali'])*/
                                                                      ->where(['id' => $datiBersaglio->id_anagrafica])->one();
 
         $datiAttivita = $modelAttivita->search(Yii::$app->request->queryParams, $datiBersaglio->id);
         $datiRischio = $modelRischio->search(Yii::$app->request->queryParams, $datiBersaglio->id);
         $datiIndicatore = $modelIndicatore->search(Yii::$app->request->queryParams, $datiBersaglio->id);
+        $datiResponsabilita = $modelResponsabilita->search(Yii::$app->request->queryParams, $datiBersaglio->id);
+        $datiRisorseUmane = $modelRisorsaUmana->search(Yii::$app->request->queryParams, $datiBersaglio->id);
+        $datiRisorseEsterne = $modelRisorsaEsterna->search(Yii::$app->request->queryParams, $datiBersaglio->id);
 
 	// Pagination
         $datiAttivita->pagination->pageSize=10;
         $datiRischio->pagination->pageSize=10;
         $datiIndicatore->pagination->pageSize=10;                                                                    
-        
-        //var_dump($datiAttivita);	  
-        
+        $datiResponsabilita->pagination->pageSize=10;
+        $datiRisorseUmane->pagination->pageSize=10;
+        $datiRisorseEsterne->pagination->pageSize=10;        
     	  
     	  if($datiBersaglio) { // Populate data information
     	      // Anagrafica
@@ -125,6 +132,18 @@ class ShowutentistatusController extends Controller
 
 	    	  if($datiIndicatore) { // Populate data information (Indicators, multiple)
 	    	     $model->datiIndicatore = $datiIndicatore;
+		    }  
+
+	    	  if($datiResponsabilita) { // Populate data information (Responsabilita, multiple)
+	    	     $model->datiRresponsabilita = $datiResponsabilita;
+		    }  
+
+	    	  if($datiRisorseUmane) { // Populate data information (Risorse umane, multiple)
+	    	     $model->datiRisorseUmane = $datiRisorseUmane;
+		    }  
+
+	    	  if($datiRisorseEsterne) { // Populate data information (Risorse esterne, multiple)
+	    	     $model->datiRisorseEsterne = $datiRisorseEsterne;
 		    }  
 	    	  
 	        return $this->render('view', [
